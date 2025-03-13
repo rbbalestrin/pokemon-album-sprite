@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 
 	let pokemonNumber = 1;
+	let pokemonSearchName = ''; // Nome para pesquisa
 	let generation = 'front_default';
 	let backgroundColor = '#000';
 	let pokemonName = '';
@@ -50,6 +51,40 @@
 		fetchPokemonData();
 	});
 
+	// Função para buscar por nome
+	async function fetchPokemonByName() {
+		if (!pokemonSearchName.trim()) {
+			error = 'Digite um nome de Pokémon';
+			return;
+		}
+
+		loading = true;
+		error = '';
+
+		try {
+			// Nome para minúsculo para compatibilidade com a API
+			const searchName = pokemonSearchName.toLowerCase().trim();
+			const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${searchName}`);
+
+			if (!response.ok) {
+				throw new Error('Pokémon não encontrado');
+			}
+
+			const data = await response.json();
+
+			// Atualiza o número do Pokémon para refletir o resultado encontrado
+			pokemonNumber = data.id;
+
+			// Continua com o processamento dos dados do Pokémon
+			processResults(data);
+		} catch (err: any) {
+			error = err.message || 'Ocorreu um erro ao buscar o Pokémon';
+			spriteUrl = '';
+		} finally {
+			loading = false;
+		}
+	}
+
 	async function fetchPokemonData() {
 		loading = true;
 		error = '';
@@ -62,38 +97,48 @@
 			}
 
 			const data = await response.json();
-			pokemonName = data.name.charAt(0).toUpperCase() + data.name.slice(1);
 
-			// Obter o URL da sprite com base na geração selecionada
-			let url = '';
-			const pathParts = generation.split('/');
-
-			if (pathParts.length === 1) {
-				url = data.sprites[generation];
-			} else {
-				let spriteObj = data.sprites;
-				for (const part of pathParts) {
-					if (spriteObj && spriteObj[part]) {
-						spriteObj = spriteObj[part];
-					} else {
-						spriteObj = null;
-						break;
-					}
-				}
-				url = spriteObj;
-			}
-
-			if (!url) {
-				throw new Error('Sprite não disponível para este Pokémon nesta geração');
-			}
-
-			spriteUrl = url;
+			// Processar os dados do Pokémon
+			processResults(data);
 		} catch (err: any) {
 			error = err.message || 'Ocorreu um erro ao buscar o Pokémon';
 			spriteUrl = '';
 		} finally {
 			loading = false;
 		}
+	}
+
+	// Função para processar os resultados da API
+	function processResults(data: any) {
+		pokemonName = data.name.charAt(0).toUpperCase() + data.name.slice(1);
+
+		// Atualiza o campo de nome para refletir o nome encontrado
+		pokemonSearchName = pokemonName;
+
+		// Obter o URL da sprite com base na geração selecionada
+		let url = '';
+		const pathParts = generation.split('/');
+
+		if (pathParts.length === 1) {
+			url = data.sprites[generation];
+		} else {
+			let spriteObj = data.sprites;
+			for (const part of pathParts) {
+				if (spriteObj && spriteObj[part]) {
+					spriteObj = spriteObj[part];
+				} else {
+					spriteObj = null;
+					break;
+				}
+			}
+			url = spriteObj;
+		}
+
+		if (!url) {
+			throw new Error('Sprite não disponível para este Pokémon nesta geração');
+		}
+
+		spriteUrl = url;
 	}
 
 	function exportImage() {
@@ -104,15 +149,12 @@
 
 		if (!ctx) return;
 
-		// Definir tamanho do canvas
 		canvas.width = 600;
 		canvas.height = 600;
 
-		// Desenhar fundo
 		ctx.fillStyle = backgroundColor;
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-		// Carregar e desenhar o sprite
 		const img = new Image();
 		img.crossOrigin = 'Anonymous';
 		img.onload = () => {
@@ -131,6 +173,13 @@
 			link.click();
 		};
 		img.src = spriteUrl;
+	}
+
+	// Função para lidar com a tecla Enter no campo de busca por nome
+	function handleKeyPress(event: KeyboardEvent) {
+		if (event.key === 'Enter') {
+			fetchPokemonByName();
+		}
 	}
 </script>
 
@@ -164,6 +213,27 @@
 				</div>
 
 				<div>
+					<label for="pokemon-name" class="mb-1 block text-sm font-medium">Nome do Pokémon:</label>
+					<div class="flex gap-2">
+						<input
+							type="text"
+							id="pokemon-name"
+							bind:value={pokemonSearchName}
+							on:keypress={handleKeyPress}
+							placeholder="Ex: pikachu, charizard..."
+							class="w-full rounded border px-3 py-2"
+						/>
+						<button
+							on:click={fetchPokemonByName}
+							class="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+							disabled={loading}
+						>
+							Buscar
+						</button>
+					</div>
+				</div>
+
+				<div class="md:col-span-2">
 					<label for="generation" class="mb-1 block text-sm font-medium">Tipo de Sprite:</label>
 					<select
 						id="generation"
