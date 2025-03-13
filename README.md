@@ -1,38 +1,93 @@
-# sv
+# Visualizador de Sprites Pokémon
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Uma aplicação web para buscar, visualizar e exportar sprites de Pokémon com cores de fundo personalizáveis.
 
-## Creating a project
+## Funcionalidades
 
-If you're seeing this, you've probably already done this step. Congrats!
+- Buscar Pokémon por número (1-1025)
+- Selecionar diferentes gerações e estilos de sprites
+- Personalizar a cor de fundo
+- Exportar o sprite com o fundo personalizado em uma imagem quadrada de 600x600 pixels
+
+## Tecnologias Utilizadas
+
+- [SvelteKit](https://kit.svelte.dev/) - Framework para criação de aplicações web
+- [TailwindCSS](https://tailwindcss.com/) - Framework CSS para estilização
+- [PokeAPI](https://pokeapi.co/) - API gratuita com dados de Pokémon
+
+## Pré-requisitos
+
+- [Node.js](https://nodejs.org/) (versão 18 ou superior)
+- [npm](https://www.npmjs.com/) ou [Bun](https://bun.sh/)
+
+## Instalação
+
+1. Clone o repositório:
 
 ```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+git clone https://github.com/seu-usuario/pokemon-sprites.git
+cd pokemon-sprites
 ```
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+2. Instale as dependências:
 
 ```bash
+# Com npm
+npm install
+
+# Com Bun
+bun install
+```
+
+## Desenvolvimento
+
+Para iniciar o servidor de desenvolvimento:
+
+```bash
+# Com npm
 npm run dev
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+# Com Bun
+bun run dev
 ```
 
-## Building
+A aplicação estará disponível em [http://localhost:5173](http://localhost:5173).
 
-To create a production version of your app:
+## Construção para Produção
+
+Para construir o projeto para produção:
 
 ```bash
+# Com npm
 npm run build
+
+# Com Bun
+bun run build
 ```
 
-You can preview the production build with `npm run preview`.
+Para visualizar a versão de produção localmente:
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+```bash
+# Com npm
+npm run preview
+
+# Com Bun
+bun run preview
+```
+
+## Como Usar
+
+1. Digite o número do Pokémon que deseja visualizar (1-1025)
+2. Clique em "Buscar" ou pressione Enter
+3. Escolha a geração/estilo do sprite no menu suspenso
+4. Selecione uma cor de fundo usando o seletor de cores
+5. Clique em "Exportar Imagem" para baixar a imagem com o sprite e o fundo personalizado
+
+## Licença
+
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+
+## Agradecimentos
+
+- [PokeAPI](https://pokeapi.co/) por fornecer a API gratuita com dados de Pokémon
+- [Svelte](https://svelte.dev/) pela excelente experiência de desenvolvimento
