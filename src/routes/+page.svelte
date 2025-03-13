@@ -184,7 +184,12 @@
 </script>
 
 <main class="container mx-auto max-w-3xl p-4">
-	<h1 class="mb-6 text-center text-3xl font-bold">Visualizador de Sprites Pokémon</h1>
+	<h1 class="mb-2 text-center text-3xl font-bold">Visualizador de Sprites Pokémon</h1>
+	<p class=" mb-9 text-center">
+		Por rb.balestrin (<a href="https://x.com/themirsbible" target="_blank" rel="noopener noreferrer"
+			>@themirsbible</a
+		>)
+	</p>
 
 	<div class="flex flex-col gap-6">
 		<div class="rounded-lg bg-gray-100 p-4">
