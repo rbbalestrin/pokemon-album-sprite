@@ -10,7 +10,8 @@
 	let loading = false;
 	let error = '';
 	let canvasElement: HTMLCanvasElement;
-	let spriteScale = 3; // Escala inicial do sprite
+	let spriteScale = 3; // Escala para visualização
+	let exportScale = 3; // Escala fixa para exportação
 
 	// Função para aumentar a escala
 	function increaseScale() {
@@ -158,13 +159,13 @@
 		const img = new Image();
 		img.crossOrigin = 'Anonymous';
 		img.onload = () => {
-			// Calcular posição para centralizar o sprite
-			const x = (canvas.width - img.width * spriteScale) / 2;
-			const y = (canvas.height - img.height * spriteScale) / 2;
+			// Calcular posição para centralizar o sprite usando a escala fixa de exportação
+			const x = (canvas.width - img.width * exportScale) / 2;
+			const y = (canvas.height - img.height * exportScale) / 2;
 
-			// Desenhar o sprite em tamanho ampliado
+			// Desenhar o sprite em tamanho ampliado com a escala fixa de exportação
 			ctx.imageSmoothingEnabled = false; // Desativar suavização para manter pixels nítidos
-			ctx.drawImage(img, x, y, img.width * spriteScale, img.height * spriteScale);
+			ctx.drawImage(img, x, y, img.width * exportScale, img.height * exportScale);
 
 			// Criar link de download
 			const link = document.createElement('a');
@@ -323,6 +324,12 @@
 								class="flex-1 rounded border px-3 py-2"
 							/>
 						</div>
+					</div>
+
+					<div class="mb-4">
+						<p class="text-sm text-gray-600">
+							O sprite será exportado sempre em escala 3x, independente do zoom na visualização.
+						</p>
 					</div>
 
 					<button
